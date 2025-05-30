@@ -16,8 +16,6 @@ class Employee extends User
         'phone',
         'image',
         'role',
-        'cv',
-        'portfolio',
         'education',
         'experience',
         'hard_skills',
