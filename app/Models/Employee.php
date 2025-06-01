@@ -40,4 +40,9 @@ class Employee extends User
     {
         return 'employee';
     }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class, "_id", "ApplicationIds");
+    }
 }

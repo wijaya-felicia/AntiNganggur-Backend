@@ -7,6 +7,8 @@ use App\Models\Employer;
 use App\Models\User;
 use App\Services\JWTService;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -32,7 +34,17 @@ class AuthController extends Controller
             'hard_skills.*' => 'string',
             'soft_skills' => 'nullable|array',
             'soft_skills.*' => 'string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
+
+        $imageUrl = null;
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $filename = Str::uuid() . '.' . $extension;
+            $path = $file->storeAs('images/profile', $filename, 'public');
+            $imageUrl = Storage::url($path);
+        }
 
         $employee = Employee::create([
             'name' => $request->name,
@@ -43,6 +55,7 @@ class AuthController extends Controller
             'experience' => $request->experience,
             'hard_skills' => $request->hard_skills ?? [],
             'soft_skills' => $request->soft_skills ?? [],
+            'image' => $imageUrl
         ]);
 
         return $this->successResponse([
@@ -64,7 +77,17 @@ class AuthController extends Controller
             'NIB' => 'nullable|string',
             'website' => 'nullable|string',
             'social' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
+
+        $imageUrl = null;
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $filename = Str::uuid() . '.' . $extension;
+            $path = $file->storeAs('images/company', $filename, 'public');
+            $imageUrl = Storage::url($path);
+        }
 
         $employer = Employer::create([
             'name' => $request->name,
@@ -73,10 +96,11 @@ class AuthController extends Controller
             'phone' => $request->phone,
             'npwp' => $request->npwp,
             'address' => $request->address,
-            'deed_of_establishment' => $request->deed_of_establishment,
-            'NIB' => $request->nib,
-            'website' => $request->website,
-            'social' => $request->social,
+            'deed_of_establishment' => $request->deed_of_establishment ?? null,
+            'NIB' => $request->nib ?? null,
+            'website' => $request->website ?? null,
+            'social' => $request->social ?? null,
+            'image' => $imageUrl
         ]);
 
         return $this->successResponse([

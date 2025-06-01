@@ -10,17 +10,17 @@ class Application extends Model
     protected $table = 'applications';
 
     protected $fillable = [
-        'employeeIds',
-        'jobId',
+        'employee_ids',
+        'job_id',
     ];
 
     public function Employee()
     {
-        return $this->belongsTo(Employee::class, "employeeIds");
+        return $this->belongsTo(Employee::class, "employee_ids");
     }
 
     public function Job()
     {
-        return $this->belongsTo(Job::class, "jobId");
+        return $this->belongsTo(Job::class, "job_id");
     }
 }
